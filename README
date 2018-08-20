@@ -1,0 +1,46 @@
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Tema2>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Pentru realizarea temei m-am folosit de o parte din codul din laborator. Am
+folosit urmatoarele structuri:
+  -> Client - retine datele unei persoane, precum si starea cardului(numar de
+  incercari invalide < 3, blocat/deblocat)
+  -> List - lista de clienti activi ce au pe langa numarul de card si socket-ul
+  tcp asignat
+  -> Transfer_List - lista de transferuri in curs de executare
+
+Mod de functionare:
+
+  Server-ul multiplexeaza intre stdin, socket-ul pe care primeste o noua
+  conexiune de la un client, socket-ul udp si socketii clientilor conectati.
+  Singurul input valid primit de la stdin este "quit" pentru care anunta toti
+  clienti de inchidere. Daca server-ul primeste cere de conectare din partea
+  unui client pe socket-ul public, automat va deschide un socket pentru clientul
+  respectiv. Apoi pe socketii clientilor se primeste comenzi, date din
+  stdin-ul clientilor.
+
+  Daca server-ul primeste o comanda de login valida(card-ul exista si pin-ul
+  este corect), atunci card-ul, alaturi de socket-ul de pe care a provenit
+  comanda vor fi introduse intr-o lista. Orice alta incercare de logare pe
+  card-ul logat respectiv va produce eroare. Comanda logout va scoate din
+  lista perechea card, socket.
+
+  Pentru listsold va cauta in lista de carduri active dupa socketul de la care a
+  provenit mesajul si va intoarce soldul de la numarul de card gasit. In cazul
+  transferului retin numerele cardurilor destinatie si sursa, precum si suma
+  transferabila pana la confirmare.
+
+  La comanda quit din partea clientului incerc sa deloghez contul persoanei daca
+  era logata, pentru a nu ramane sesiune deschisa si server inchid socketul si
+  sterg din multimea read_fds.
+
+  In cazul comenzii transfer, operatiunea este pusa intr-o lista si in functie
+  de confirmare, este fie efectuata, fie respinsa.
+
+  Pentru Unlock trimit cu sendto catre server comanda impreuna cu numarul de
+  card, apoi astept cererea de trimitere parola secreta sau eroarea
+  corespunzatoare. Daca primesc eroare ma opresc, altfel citesc de la tastatura
+  parola secreta si trimit din nou la server.
+
+Realizat de : Gengiu Robert
+Grupa : 322CB
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
